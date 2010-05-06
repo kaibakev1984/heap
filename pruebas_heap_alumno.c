@@ -258,6 +258,27 @@ static void prueba_heap_volumen(){
 	}
 	print_test("Prueba heap desencolar funciona correctamente", ok);
 
+	/* Pruebo con muchos elementos aleatorios */
+	for(size_t i = 0; i < n; i++){
+		arreglo[i] = rand() % 40;
+	}	
+
+	for(size_t i = 0; i < n; i++){
+		ok &= heap_encolar(heap, &arreglo[i]);
+		if(!ok) break;
+	}
+
+	print_test("Prueba heap se encolaron muchos elementos aleatorios", ok);
+
+	/* Pruebo que se desencolaron muchos elementos correctamente */
+	for(size_t i = 0; i < n; i++){
+		void *max = heap_ver_max(heap);
+		ok &= !cmp(max, heap_ver_max(heap));
+		if(!ok) break;
+	}
+
+	print_test("Prueba heap se desencolaron correctamente todos los elementos", ok);
+
 	heap_destruir(heap, NULL);
 }
 
@@ -289,7 +310,7 @@ static void prueba_heap_sort(unsigned seed){
 
 	srand(seed);
 	for(size_t i = 0; i < n; i++){
-		arreglo[i] = rand() % 20;
+		arreglo[i] = (int )rand() % 20;
 		elementos[i] = malloc(sizeof(int));
 		*elementos[i] = arreglo[i];
 	}
@@ -301,7 +322,7 @@ static void prueba_heap_sort(unsigned seed){
 	heap_sort((void *)elementos, n - 1, cmp);
 
 	/* Pruebo que heap sort ordena mi arreglo */
-	print_test("Los elementos son iguales", son_iguales((void *)elementos, arreglo, n - 1));
+	print_test("Los elementos estan ordenados", son_iguales((void *)elementos, arreglo, n - 1));
 
 	/* Libero los elementos pedidos al arreglo */
 	elementos_liberar((void *)elementos, n);
