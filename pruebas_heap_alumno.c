@@ -4,83 +4,119 @@
 #include <stdlib.h>
 
 
-int cmp(const void*n1, const void* n2){
-    if ((int*)n1 == (int*)n2) return 0;
-	else if ((int*)n1 > (int*)n2) return 1;
+int cmp_aux(int*n1,int*n2){
+	if (n1[0] == n2[0]) return 0;
+	else if (n1[0] > n2[0]) return 1;
 	else return -1;
 }
 
-void prueba_1(){
-		heap_t *heap = heap_crear(cmp);
-	
-	int* x1 = malloc(sizeof(int));
-	*x1 = 1;
-	int* x2 = malloc(sizeof(int));
-	*x2 = 2;
-	int* x3 = malloc(sizeof(int));
-	*x3 = 4;
-	int* x4 = malloc(sizeof(int));
-	*x4 = 3;
-
-	print_test("heap esta vacio", heap_esta_vacio(heap));
-	print_test("heap cantidad es 0", heap_cantidad(heap) == 0);
-	print_test("heap maximo es NULL", heap_ver_max(heap) == NULL);
-
-	print_test("Se encolo un 1", heap_encolar(heap,x1));
-	print_test("heap cantidad es 1", heap_cantidad(heap) == *x1);
-	print_test("heap maximo es 1", heap_ver_max(heap) == x1);
-
-	print_test("Se encolo un 2", heap_encolar(heap,x2));
-	print_test("heap cantidad es 2", heap_cantidad(heap) == *x2);
-	print_test("heap maximo es 2", heap_ver_max(heap) == x2);
-
-	print_test("Se encolo un 4", heap_encolar(heap,x3));
-	print_test("heap cantidad es 3", heap_cantidad(heap) == *x4);
-	print_test("heap maximo es 4", heap_ver_max(heap) == x3);
-
-	print_test("Se encolo un 3", heap_encolar(heap,x4));
-	print_test("heap cantidad es 4", heap_cantidad(heap) == *x3);
-	print_test("heap maximo es 4", heap_ver_max(heap) == x3);
-
-	free(x1);
-	free(x2);
-	free(x3);
-	free(x4);
-
-	heap_destruir(heap,NULL);
+int cmp(const void*n1, const void* n2){
+	return cmp_aux((int*)n1, (int*)n2);
 }
 
-void prueba_2(){
+void prueba_encolar(){
+	printf("INICIO DE PRUEBAS ENCOLAR\n");
+
+	/* Declaro las variables a utilizar */
 	heap_t *heap = heap_crear(cmp);
 
-	int x1 = 1;
-	int x2 = 2;
-	int x3 = 4;
-	int x4 = 3;
+	int x1 = 2;
+	int x2 = 3;
+	int x3 = 6;
+	int x4 = 5;
+	int x5 = 4;
+	int x6 = 1;
+	int x7 = 8;
 
 	print_test("heap esta vacio", heap_esta_vacio(heap));
 	print_test("heap cantidad es 0", heap_cantidad(heap) == 0);
 	print_test("heap maximo es NULL", heap_ver_max(heap) == NULL);
 
-	print_test("Se encolo un 1", heap_encolar(heap,&x1));
-	print_test("heap cantidad es 1", heap_cantidad(heap) == x1);
-	print_test("heap maximo es 1", heap_ver_max(heap) == &x1);
+	print_test("Se encolo un 2", heap_encolar(heap,&x1));
+	print_test("heap cantidad es 1", heap_cantidad(heap) == 1);
+	print_test("heap maximo es 2", heap_ver_max(heap) == &x1);
 
-	print_test("Se encolo un 2", heap_encolar(heap,&x2));
-	print_test("heap cantidad es 2", heap_cantidad(heap) == x2);
-	print_test("heap maximo es 2", heap_ver_max(heap) == &x2);
+	print_test("Se encolo un 3", heap_encolar(heap,&x2));
+	print_test("heap cantidad es 2", heap_cantidad(heap) == 2);
+	print_test("heap maximo es 3", heap_ver_max(heap) == &x2);
 
-	print_test("Se encolo un 4", heap_encolar(heap,&x3));
-	print_test("heap cantidad es 3", heap_cantidad(heap) == x4);
-	print_test("heap maximo es 4", heap_ver_max(heap) == &x3);
+	print_test("Se encolo un 6", heap_encolar(heap,&x3));
+	print_test("heap cantidad es 3", heap_cantidad(heap) == 3);
+	print_test("heap maximo es 6", heap_ver_max(heap) == &x3);
 
-	print_test("Se encolo un 3", heap_encolar(heap,&x4));
-	print_test("heap cantidad es 4", heap_cantidad(heap) == x3);
-	print_test("heap maximo es 4", heap_ver_max(heap) == &x3);
+	print_test("Se encolo un 5", heap_encolar(heap,&x4));
+	print_test("heap cantidad es 4", heap_cantidad(heap) == 4);
+	print_test("heap maximo es 6", heap_ver_max(heap) == &x3);
+
+	print_test("Se encolo un 4", heap_encolar(heap,&x5));
+	print_test("heap cantidad es 5", heap_cantidad(heap) == 5);
+	print_test("heap maximo es 6", heap_ver_max(heap) == &x3);
+
+	print_test("Se encolo un 1", heap_encolar(heap,&x6));
+	print_test("heap cantidad es 4", heap_cantidad(heap) == 6);
+	print_test("heap maximo es 6", heap_ver_max(heap) == &x3);
+
+	print_test("Se encolo un 8", heap_encolar(heap,&x7));
+	print_test("heap cantidad es 4", heap_cantidad(heap) == 7);
+	print_test("heap maximo es 8", heap_ver_max(heap) == &x7);
 
 	heap_destruir(heap,NULL);
 }
 
+void prueba_desencolar(){
+	printf("INICIO DE PRUEBAS DESENCOLAR\n");
+
+	/* Declaro las variables a utilizar */
+	heap_t *heap = heap_crear(cmp);
+
+	int x1 = 2;
+	int x2 = 3;
+	int x3 = 6;
+	int x4 = 5;
+	int x5 = 4;
+	int x6 = 1;
+	int x7 = 8;
+
+	print_test("Se encolo un 2", heap_encolar(heap,&x1));
+	print_test("Se encolo un 3", heap_encolar(heap,&x2));
+	print_test("Se encolo un 6", heap_encolar(heap,&x3));
+	print_test("Se encolo un 5", heap_encolar(heap,&x4));
+	print_test("Se encolo un 4", heap_encolar(heap,&x5));
+	print_test("Se encolo un 1", heap_encolar(heap,&x6));
+	print_test("Se encolo un 8", heap_encolar(heap,&x7));
+
+	print_test("Se desencolo un 8", heap_desencolar(heap));
+	print_test("heap cantidad es 6", heap_cantidad(heap) == 6);
+	print_test("heap maximo es 6", heap_ver_max(heap) == &x3);
+
+	print_test("Se desencolo un 6", heap_desencolar(heap));
+	print_test("heap cantidad es 5", heap_cantidad(heap) == 5);
+	print_test("heap maximo es 5", heap_ver_max(heap) == &x4);
+
+	print_test("Se desencolo un 5", heap_desencolar(heap));
+	print_test("heap cantidad es 4", heap_cantidad(heap) == 4);
+	print_test("heap maximo es 4", heap_ver_max(heap) == &x5);
+
+	print_test("Se desencolo un 4", heap_desencolar(heap));
+	print_test("heap cantidad es 3", heap_cantidad(heap) == 3);
+	print_test("heap maximo es 3", heap_ver_max(heap) == &x2);
+
+	print_test("Se desencolo un 3", heap_desencolar(heap));
+	print_test("heap cantidad es 2", heap_cantidad(heap) == 2);
+	print_test("heap maximo es 2", heap_ver_max(heap) == &x1);
+
+	print_test("Se desencolo un 2", heap_desencolar(heap));
+	print_test("heap cantidad es 1", heap_cantidad(heap) == 1);
+	print_test("heap maximo es 1", heap_ver_max(heap) == &x6);
+
+	print_test("Se desencolo un 1", heap_desencolar(heap));
+	print_test("heap esta vacio", heap_esta_vacio(heap));
+	print_test("heap cantidad es 0", heap_cantidad(heap) == 0);
+	print_test("heap maximo es NULL", heap_ver_max(heap) == NULL);
+
+	heap_destruir(heap,NULL);
+
+}
 static void prueba_heap_vacio(){
 	printf("INICIO DE PRUEBAS CON HEAP VACIO\n");
 
@@ -207,6 +243,8 @@ static void prueba_heap_volumen(){
 	bool ok = true;
 	for(size_t i = 0; i < n; i++){
 		ok &= heap_encolar(heap, &arreglo[i]);
+		// Chequea si se conserva el invariante de heap;
+		// en caso contrario, ok será false
 		ok &= &arreglo[i] == heap_ver_max(heap);
 	}
 	print_test("Prueba heap se encolaron todos los elementos", ok);
@@ -222,6 +260,8 @@ static void prueba_heap_volumen(){
 }
 
 void pruebas_heap_alumno(){
+	prueba_encolar();
+	prueba_desencolar();
 	prueba_heap_vacio();
 	prueba_heap_guardar();
 	prueba_heap_borrar();

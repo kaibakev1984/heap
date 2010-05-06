@@ -18,3 +18,5 @@ clear:
 	clear
 clean: $(OBJFILES)
 	rm -f $(EXEC) *.o
+gdb: all clear
+	gdb $(GFLAGS) ./$(EXEC)

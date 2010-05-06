@@ -11,18 +11,63 @@ struct heap{
 };
 
 /* Funciones auxiliares */
-void swap(void**vector,size_t pos, size_t pos_padre){
+void swap(void **vector,size_t pos, size_t pos_padre){
 	void *aux = vector[pos];
 	vector[pos] = vector[pos_padre];
 	vector[pos_padre] = aux;
 }
 
-bool redimensionar(heap_t *heap){
-	void **datos_nuevos = realloc(heap->datos, 2*heap->capacidad*sizeof(void *));
+bool redimensionar(heap_t *heap, size_t tam_nuevo){
+	void **datos_nuevos = realloc(heap->datos, tam_nuevo*sizeof(void *));
 	if(!datos_nuevos) return false;
 	heap->datos = datos_nuevos;
 	heap->capacidad = 2*heap->capacidad;
 	return true;
+}
+
+void upheap(void **vector, size_t pos, cmp_func_t cmp){
+	if(pos == 0) return;
+	size_t pos_padre = ((pos - 1) / 2);
+//	printf("%d\n",cmp(vector[pos], vector[pos_padre]) );
+	if(cmp(vector[pos], vector[pos_padre]) < 0) return;
+	swap(vector,pos,pos_padre);
+	upheap(vector, pos_padre, cmp);
+}
+
+void downheap(void** vector, size_t cant, size_t pos, cmp_func_t cmp){
+	if (pos >= cant) return;
+	size_t pos_izq = (2 * pos) + 1;
+	size_t pos_der = (2 * pos) + 2;
+	size_t pos_max = pos;
+	if((pos_izq < cant) && (cmp(vector[pos_izq],vector[pos_max]) > 0)){
+		pos_max = pos_izq;
+	}
+	if((pos_der < cant) && (cmp(vector[pos_der],vector[pos_max]) > 0)){
+		pos_max = pos_der;
+	}
+	if(pos != pos_max){
+		swap(vector,pos,pos_max);
+		downheap(vector,cant,pos_max,cmp);
+	}
+}
+
+void heapify(void *elementos[], size_t cant, cmp_func_t cmp){
+	for(size_t i = cant; i > 0; i--){
+		size_t pos_padre = (i - 1) / 2;
+		if(cmp(elementos[i], elementos[pos_padre]) > 0){
+			upheap(elementos, i, cmp);
+		}
+	}
+}
+
+void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
+	heapify(elementos, cant, cmp);
+	size_t largo_rel = cant;
+	for(size_t i = 0; i < cant; i++){
+		swap(elementos, i, largo_rel - i);
+		largo_rel--;
+		downheap(elementos, largo_rel, i, cmp);
+	}
 }
 
 heap_t *heap_crear(cmp_func_t cmp){
@@ -61,40 +106,14 @@ void *heap_ver_max(const heap_t *heap){
 	return heap->datos[0];
 }
 
-void upheap(void **vector, size_t pos, cmp_func_t cmp){
-	if(pos == 0) return;
-	size_t pos_padre = ((pos - 1) / 2);
-//	printf("%d\n",cmp(vector[pos], vector[pos_padre]) );
-	if(cmp(vector[pos], vector[pos_padre]) < 0) return;
-	swap(vector,pos,pos_padre);
-	upheap(vector, pos_padre, cmp);
-}
-
 bool heap_encolar(heap_t *heap, void *elem){
 	heap->datos[heap->cantidad] = elem;
 	heap->cantidad++;
 	if(heap->cantidad > heap->capacidad / 2){
-		if(!redimensionar(heap)) return false;
+		if(!redimensionar(heap, 2*heap->capacidad)) return false;
 	}
 	upheap(heap->datos, heap->cantidad - 1, heap->cmp);
 	return true;
-}
-
-void downheap(void** vector, size_t cant, size_t pos, cmp_func_t cmp){
-	if (pos >= cant) return;
-	size_t pos_izq = (2 * pos) + 1;
-	size_t pos_der = (2 * pos) + 2;
-	size_t pos_max = pos;
-	if((pos_izq < cant) && (cmp(vector[pos_izq],vector[pos_max]) > 0)){
-		pos_max = pos_izq;
-	}
-	if((pos_der < cant) && (cmp(vector[pos_der],vector[pos_max]) > 0)){
-		pos_max = pos_der;
-	}
-	if(pos != pos_max){
-		swap(vector,pos,pos_max);
-		downheap(vector,cant,pos_max,cmp);
-	}
 }
 
 void *heap_desencolar(heap_t *heap){
@@ -102,6 +121,9 @@ void *heap_desencolar(heap_t *heap){
 	void* dato = heap->datos[0];
 	swap(heap->datos,0,heap->cantidad - 1);
 	heap->cantidad--;
+	if(heap->cantidad > heap->capacidad / 4){
+		redimensionar(heap, heap->capacidad / 2);
+	}
 	downheap(heap->datos, heap->cantidad, 0, heap->cmp);
 	return dato;
 }
