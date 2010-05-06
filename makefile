@@ -10,15 +10,15 @@ OBJFILES = heap.o main.o testing.o pruebas_heap_alumno.o mergesort.o
 $(EXEC): $(OBJFILES)
 	$(CC) $(CFLAGS) $(OBJFILES) -o $(EXEC)
 all: $(EXEC)
-run: all
+test: all
 	./$(EXEC)
+run: all 
+	clear
+	./$(EXEC)
+	valgrind $(VFLAGS) ./$(EXEC)
+	rm -f $(EXEC) *.o
+	zip	heap.zip heap.c heap.h pruebas_heap_alumno.c mergesort.c mergesort.h
 valgrind: all
 	valgrind $(VFLAGS) ./$(EXEC)
-clear:
-	clear
-clean: $(OBJFILES)
-	rm -f $(EXEC) *.o
 gdb: all clear
 	gdb $(GFLAGS) ./$(EXEC)
-zip: heap.c pruebas_heap_alumno.c
-	zip heap.zip heap.c heap.h pruebas_heap_alumno.c mergesort.c mergesort.h
