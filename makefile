@@ -11,6 +11,10 @@ $(EXEC): $(OBJFILES)
 	$(CC) $(CFLAGS) $(OBJFILES) -o $(EXEC)
 all: $(EXEC)
 run: all
-	.$(EXEC)
+	./$(EXEC)
 valgrind: all
 	valgrind $(VFLAGS) ./$(EXEC)
+clear:
+	clear
+clean: $(OBJFILES)
+	rm -f $(EXEC) *.o
