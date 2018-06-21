@@ -28,9 +28,8 @@ bool redimensionar(heap_t *heap, size_t tam_nuevo){
 void upheap(void **vector, size_t pos, cmp_func_t cmp){
 	if(pos == 0) return;
 	size_t pos_padre = ((pos - 1) / 2);
-//	printf("%d\n",cmp(vector[pos], vector[pos_padre]) );
 	if(cmp(vector[pos], vector[pos_padre]) < 0) return;
-	swap(vector,pos,pos_padre);
+	swap(vector, pos, pos_padre);
 	upheap(vector, pos_padre, cmp);
 }
 
@@ -39,22 +38,31 @@ void downheap(void** vector, size_t cant, size_t pos, cmp_func_t cmp){
 	size_t pos_izq = (2 * pos) + 1;
 	size_t pos_der = (2 * pos) + 2;
 	size_t pos_max = pos;
-	if((pos_izq < cant) && (cmp(vector[pos_izq],vector[pos_max]) > 0)){
+	if((pos_izq < cant) && (cmp(vector[pos_izq], vector[pos_max]) > 0)){
 		pos_max = pos_izq;
 	}
-	if((pos_der < cant) && (cmp(vector[pos_der],vector[pos_max]) > 0)){
+	if((pos_der < cant) && (cmp(vector[pos_der], vector[pos_max]) > 0)){
 		pos_max = pos_der;
 	}
 	if(pos != pos_max){
-		swap(vector,pos,pos_max);
-		downheap(vector,cant,pos_max,cmp);
+		swap(vector, pos, pos_max);
+		downheap(vector, cant, pos_max,cmp);
 	}
 }
 
-void heapify(void *elementos[], size_t cant, cmp_func_t cmp){
-	for(size_t i = cant; i > 0; i--){
-		size_t pos_padre = (i - 1) / 2;
-		if(!cmp(elementos[i], elementos[pos_padre])) upheap(elementos, i, cmp);
+void heapify(void **elementos, size_t cant, cmp_func_t cmp){
+	for(size_t pos = cant; pos > 0; pos--){
+		size_t pos_padre = (pos - 1) / 2;
+		if(cmp(elementos[pos], elementos[pos_padre]) < 0)
+			downheap(elementos, cant, pos, cmp);
+		else
+			upheap(elementos, pos, cmp);
+	}
+}
+
+void mostrar_aux(void *elementos[], size_t cant){
+	printf("mostrar_aux\n");
+	for(size_t i = 0; i < cant; i++){
 		printf("%d ", *(int *)elementos[i]);
 	}
 	printf("\n");
@@ -62,6 +70,7 @@ void heapify(void *elementos[], size_t cant, cmp_func_t cmp){
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heapify(elementos, cant, cmp);
+	mostrar_aux(elementos, cant);
 	size_t largo_rel = cant;
 	for(size_t i = 0; i < cant; i++){
 		swap(elementos, i, largo_rel - i);

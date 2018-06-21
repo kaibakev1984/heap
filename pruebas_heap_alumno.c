@@ -14,6 +14,21 @@ int cmp(const void*n1, const void* n2){
 	return cmp_aux((int*)n1, (int*)n2);
 }
 
+/* Auxiliares para observar el heap */
+struct heap{
+	void **datos;
+	size_t cantidad;
+	size_t capacidad;
+	cmp_func_t cmp;
+};
+
+void heap_mostrar(void *datos[], size_t cantidad){
+	for(size_t i = 0; i < cantidad; i++){
+		printf("%d ", *(int *)datos[i]);
+	}
+	printf("\n");
+}
+
 void prueba_encolar(){
 	printf("INICIO DE PRUEBAS ENCOLAR\n");
 
@@ -85,7 +100,8 @@ void prueba_desencolar(){
 	print_test("Se encolo un 1", heap_encolar(heap,&x6));
 	print_test("Se encolo un 8", heap_encolar(heap,&x7));
 
-	print_test("Se desencolo un 8", heap_desencolar(heap));
+
+	print_test("Se desencolo un 8", heap_desencolar(heap) == &x7);
 	print_test("heap cantidad es 6", heap_cantidad(heap) == 6);
 	print_test("heap maximo es 6", heap_ver_max(heap) == &x3);
 
@@ -280,11 +296,11 @@ static void prueba_heap_sort(){
 	/* Declaro las variables a utilizar */
 	size_t n = 10;
 	unsigned *elementos[n];
+	int arreglo[10] = {12, 4, 9, 14, 17, 15, 1, 2, 6};
 
-	srand(time(NULL));
 	for(size_t i = 0; i < n; i++){
 		elementos[i] = malloc(sizeof(int));
-		*elementos[i] = rand() % 20;
+		*elementos[i] = arreglo[i];
 	}
 	elementos_mostrar((void *)elementos, n - 1);
 	heap_sort((void *)elementos, n - 1, cmp);
