@@ -21,7 +21,7 @@ bool redimensionar(heap_t *heap, size_t tam_nuevo){
 	void **datos_nuevos = realloc(heap->datos, tam_nuevo*sizeof(void *));
 	if(!datos_nuevos) return false;
 	heap->datos = datos_nuevos;
-	heap->capacidad = 2*heap->capacidad;
+	heap->capacidad = tam_nuevo;
 	return true;
 }
 
@@ -120,7 +120,7 @@ void *heap_desencolar(heap_t *heap){
 	void* dato = heap->datos[0];
 	swap(heap->datos,0,heap->cantidad - 1);
 	heap->cantidad--;
-	if(heap->cantidad > heap->capacidad / 4){
+	if(heap->cantidad > heap->capacidad / 2){
 		redimensionar(heap, heap->capacidad / 2);
 	}
 	downheap(heap->datos, heap->cantidad, 0, heap->cmp);
