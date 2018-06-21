@@ -60,22 +60,12 @@ void heapify(void **elementos, size_t cant, cmp_func_t cmp){
 	}
 }
 
-void mostrar_aux(void *elementos[], size_t cant){
-	printf("mostrar_aux\n");
-	for(size_t i = 0; i < cant; i++){
-		printf("%d ", *(int *)elementos[i]);
-	}
-	printf("\n");
-}
-
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heapify(elementos, cant, cmp);
-	mostrar_aux(elementos, cant);
-	size_t largo_rel = cant;
+	size_t largo_rel = cant - 1;
 	for(size_t i = 0; i < cant; i++){
-		swap(elementos, i, largo_rel - i);
-		largo_rel--;
-		downheap(elementos, largo_rel, i, cmp);
+		swap(elementos, 0, largo_rel - i);
+		downheap(elementos, largo_rel - i, 0, cmp);
 	}
 }
 
