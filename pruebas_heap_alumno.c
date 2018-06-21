@@ -3,31 +3,16 @@
 #include "mergesort.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-int cmp_aux(int*n1,int*n2){
+/* Función de comparación */
+int cmp_aux(int *n1, int *n2){
 	if (n1[0] == n2[0]) return 0;
 	else if (n1[0] > n2[0]) return 1;
 	else return -1;
 }
 
-int cmp(const void*n1, const void* n2){
-	return cmp_aux((int*)n1, (int*)n2);
-}
-
-/* Auxiliares para observar el heap */
-struct heap{
-	void **datos;
-	size_t cantidad;
-	size_t capacidad;
-	cmp_func_t cmp;
-};
-
-void heap_mostrar(void *datos[], size_t cantidad){
-	for(size_t i = 0; i < cantidad; i++){
-		printf("%d ", *(int *)datos[i]);
-	}
-	printf("\n");
+int cmp(const void *n1, const void *n2){
+	return cmp_aux((int *)n1, (int *)n2);
 }
 
 void prueba_encolar(){
@@ -276,7 +261,10 @@ static void prueba_heap_volumen(){
 	heap_destruir(heap, NULL);
 }
 
-/* Funciones adicionales para la prueba de heap sort */
+/* Funciones adicionales para la prueba de heap sort 
+   Adicionalmente, se pasa un archivo.c y .h, para el
+   ordenamiento de un arreglo ~mergesort~ implementado
+   por el grupo */
 void elementos_liberar(void **elementos, size_t n){
 	size_t i = 0;
 	while(i < n){
@@ -285,18 +273,9 @@ void elementos_liberar(void **elementos, size_t n){
 	}
 }
 
-void elementos_mostrar(void **elementos, size_t cant){
-	for(size_t i = 0; i < cant; i++){
-		printf("%d ", *(int *)elementos[i] );
-	}
-	printf("\n");
-}
-
-bool son_iguales(void **vec1, void **vec2, size_t n, cmp_func_t cmp){
-	if(n < 1) return true;
-	if(!cmp(vec1[n], vec2[n])){
-		return son_iguales(vec1, vec2, n - 1, cmp);
-	}
+bool son_iguales(void **vec1, int *vec2, size_t cant){
+	if(cant < 1) return true;
+	if(*(int *)vec1[cant] == vec2[cant]) return son_iguales(vec1, vec2, cant - 1);
 	return false;
 }
 
@@ -314,13 +293,15 @@ static void prueba_heap_sort(unsigned seed){
 		elementos[i] = malloc(sizeof(int));
 		*elementos[i] = arreglo[i];
 	}
-	elementos_mostrar((void *)elementos, n);
-	heap_sort((void *)elementos, n - 1, cmp);
-	mergesort(arreglo, n);
-	show_array(arreglo, n);
-	elementos_mostrar((void *)elementos, n);
 
-	print_test("Los elementos son iguales", son_iguales((void *)elementos, (void *)arreglo, n, cmp));
+	/* Ordeno mi arreglo auxiliar */
+	mergesort(arreglo, n);
+
+	/* Ordeno usando heap sort*/
+	heap_sort((void *)elementos, n - 1, cmp);
+
+	/* Pruebo que heap sort ordena mi arreglo */
+	print_test("Los elementos son iguales", son_iguales((void *)elementos, arreglo, n - 1));
 
 	/* Libero los elementos pedidos al arreglo */
 	elementos_liberar((void *)elementos, n);
@@ -334,6 +315,6 @@ void pruebas_heap_alumno(){
 	prueba_heap_borrar();
  	prueba_heap_reemplazar_con_destruir();
  	prueba_heap_volumen();
- 	prueba_heap_sort(time(NULL));
+ 	prueba_heap_sort(1984);
 }
 

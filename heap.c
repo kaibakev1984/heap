@@ -62,7 +62,7 @@ void heapify(void **elementos, size_t cant, cmp_func_t cmp){
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heapify(elementos, cant, cmp);
-	size_t largo_rel = cant - 1;
+	size_t largo_rel = cant;
 	for(size_t i = 0; i < cant; i++){
 		swap(elementos, 0, largo_rel - i);
 		downheap(elementos, largo_rel - i, 0, cmp);
