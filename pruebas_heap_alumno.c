@@ -2,7 +2,7 @@
 #include "heap.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 
 int cmp_aux(int*n1,int*n2){
 	if (n1[0] == n2[0]) return 0;
@@ -259,6 +259,41 @@ static void prueba_heap_volumen(){
 	heap_destruir(heap, NULL);
 }
 
+void elementos_liberar(void **elementos, size_t n){
+	size_t i = 0;
+	while(i < n){
+		free(elementos[i]);
+		i++;
+	}
+}
+
+void elementos_mostrar(void **elementos, size_t cant){
+	for(size_t i = 0; i < cant; i++){
+		printf("%d ", *(int *)elementos[i] );
+	}
+	printf("\n");
+}
+
+static void prueba_heap_sort(){
+	printf("INICIO DE PRUEBAS CON HEAP SORT\n");
+	
+	/* Declaro las variables a utilizar */
+	size_t n = 10;
+	unsigned *elementos[n];
+
+	srand(time(NULL));
+	for(size_t i = 0; i < n; i++){
+		elementos[i] = malloc(sizeof(int));
+		*elementos[i] = rand() % 20;
+	}
+	elementos_mostrar((void *)elementos, n - 1);
+	heap_sort((void *)elementos, n - 1, cmp);
+	elementos_mostrar((void *)elementos, n - 1);
+
+	/* Libero los elementos pedidos al arreglo */
+	elementos_liberar((void *)elementos, n);
+}
+
 void pruebas_heap_alumno(){
 	prueba_encolar();
 	prueba_desencolar();
@@ -267,5 +302,6 @@ void pruebas_heap_alumno(){
 	prueba_heap_borrar();
  	prueba_heap_reemplazar_con_destruir();
  	prueba_heap_volumen();
+ 	prueba_heap_sort();
 }
 

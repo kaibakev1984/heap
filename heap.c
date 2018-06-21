@@ -54,10 +54,10 @@ void downheap(void** vector, size_t cant, size_t pos, cmp_func_t cmp){
 void heapify(void *elementos[], size_t cant, cmp_func_t cmp){
 	for(size_t i = cant; i > 0; i--){
 		size_t pos_padre = (i - 1) / 2;
-		if(cmp(elementos[i], elementos[pos_padre]) > 0){
-			upheap(elementos, i, cmp);
-		}
+		if(!cmp(elementos[i], elementos[pos_padre])) upheap(elementos, i, cmp);
+		printf("%d ", *(int *)elementos[i]);
 	}
+	printf("\n");
 }
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
