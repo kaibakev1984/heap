@@ -20,5 +20,7 @@ run: all
 	zip	heap.zip heap.c heap.h pruebas_heap_alumno.c mergesort.c mergesort.h
 valgrind: all
 	valgrind $(VFLAGS) ./$(EXEC)
-gdb: all clear
+gdb: all
 	gdb $(GFLAGS) ./$(EXEC)
+clean: *.zip
+	rm -f *.zip

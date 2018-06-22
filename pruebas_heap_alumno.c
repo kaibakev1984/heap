@@ -310,7 +310,7 @@ static void prueba_heap_sort(unsigned seed){
 
 	srand(seed);
 	for(size_t i = 0; i < n; i++){
-		arreglo[i] = (int )rand() % 20;
+		arreglo[i] = (int )rand() % 200;
 		elementos[i] = malloc(sizeof(int));
 		*elementos[i] = arreglo[i];
 	}
@@ -319,7 +319,7 @@ static void prueba_heap_sort(unsigned seed){
 	mergesort(arreglo, n);
 
 	/* Ordeno usando heap sort*/
-	heap_sort((void *)elementos, n - 1, cmp);
+	heap_sort((void *)elementos, n, cmp);
 
 	/* Pruebo que heap sort ordena mi arreglo */
 	print_test("Los elementos estan ordenados", son_iguales((void *)elementos, arreglo, n - 1));
@@ -329,7 +329,7 @@ static void prueba_heap_sort(unsigned seed){
 }
 
 void pruebas_heap_alumno(){
-	prueba_encolar();
+	prueba_encolar();	
 	prueba_desencolar();
 	prueba_heap_vacio();
 	prueba_heap_guardar();

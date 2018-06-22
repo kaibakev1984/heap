@@ -51,7 +51,7 @@ void downheap(void** vector, size_t cant, size_t pos, cmp_func_t cmp){
 }
 
 void heapify(void **elementos, size_t cant, cmp_func_t cmp){
-	for(size_t pos = cant; pos > 0; pos--){
+	for(size_t pos = cant - 1; pos > 0; pos--){
 		size_t pos_padre = (pos - 1) / 2;
 		if(cmp(elementos[pos], elementos[pos_padre]) < 0)
 			downheap(elementos, cant, pos, cmp);
@@ -62,7 +62,7 @@ void heapify(void **elementos, size_t cant, cmp_func_t cmp){
 
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp){
 	heapify(elementos, cant, cmp);
-	size_t largo_rel = cant;
+	size_t largo_rel = cant - 1;
 	for(size_t i = 0; i < cant; i++){
 		swap(elementos, 0, largo_rel - i);
 		downheap(elementos, largo_rel - i, 0, cmp);
