@@ -51,12 +51,8 @@ void downheap(void** vector, size_t cant, size_t pos, cmp_func_t cmp){
 }
 
 void heapify(void **elementos, size_t cant, cmp_func_t cmp){
-	for(size_t pos = cant - 1; pos > 0; pos--){
-		size_t pos_padre = (pos - 1) / 2;
-		if(cmp(elementos[pos], elementos[pos_padre]) < 0)
-			downheap(elementos, cant, pos, cmp);
-		else
-			upheap(elementos, pos, cmp);
+	for(size_t pos = cant; pos > 0; pos--){
+		downheap(elementos, cant, pos - 1, cmp);
 	}
 }
 
